@@ -101,8 +101,6 @@ def feed() -> None:
 	list_videos(authenticated_request('/feed?authToken=', True), addon.getSettingBool('watch_history_hide_watched_feed'))
 
 def updatefeed() -> None:
-	instance: str = addon.getSettingString('instance')
-
 	channels: list = authenticated_request('/subscriptions')
 	channelcount: int = len(channels)
 
@@ -110,11 +108,11 @@ def updatefeed() -> None:
 	progressbar.create(addon.getLocalizedString(30021))
 
 	for i in range(channelcount):
+		if progressbar.iscanceled():
+			return
 		channel = channels[i]
 		progressbar.update(int((i + 1) / channelcount * 100), f"{i + 1}/{channelcount} | {channel['name']}")
 		authenticated_request(channel['url'])
-
-	feed()
 
 def list_channels(channels: list, nextpage: str='') -> None:
 	for channel in channels:
