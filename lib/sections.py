@@ -21,7 +21,7 @@ def home() -> None:
 	if addon.getSettingBool('use_login'):
 		folders.append(('feed', addon.getLocalizedString(30001)))
 		if addon.getSettingBool('show_feed_update'):
-			folders.append(('updatefeed', addon.getLocalizedString(30020)))
+			folders.append(('updatefeed', addon.getLocalizedString(30020), False))
 		folders.append(('subscriptions', addon.getLocalizedString(30002)))
 		folders.append(('playlists',addon.getLocalizedString(30003)))
 		if addon.getSettingBool('watch_history_enable') and len(addon.getSettingString('watch_history_playlist')) > 0:
@@ -29,12 +29,17 @@ def home() -> None:
 	
 	folders.append(('trending', addon.getLocalizedString(30005)))
 	folders.append(('search_select', addon.getLocalizedString(30006)))
-	folders.append(('settings', addon.getLocalizedString(30007)))
+	folders.append(('settings', addon.getLocalizedString(30007), False))
 
 	for folder in folders:
-		xbmcplugin.addDirectoryItem(handle=addon_handle, url=f"{addon_url}/{folder[0]}", listitem=xbmcgui.ListItem(folder[1]), isFolder=True)
+		listitem = xbmcgui.ListItem(folder[1])
+		listitem.setArt({'thumb': get_icon(folder[0])})
+		xbmcplugin.addDirectoryItem(handle=addon_handle, url=f"{addon_url}/{folder[0]}", listitem=listitem, isFolder=folder[2] if len(folder) > 2 else True)
 
 	xbmcplugin.endOfDirectory(addon_handle)
+
+def get_icon(menuid):
+	return f"special://home/addons/{addon.getAddonInfo('id')}/resources/icons/{menuid}.png"
 
 def watch(video_id: str) -> None:
 	listitem = xbmcgui.ListItem(

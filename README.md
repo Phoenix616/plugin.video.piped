@@ -42,4 +42,7 @@ But, you can also choose your favourite Piped instance or host your own and chan
 This plugin is neither affiliated with nor endorsed by TeamPiped.
 
 # License
+
 Piped Addon for Kodi is licensed under the AGPL v3 License. See [LICENSE](LICENSE.txt) for details.
+
+Icons from Font Awesome 6 are used under [CC BY 4.0](https://github.com/FortAwesome/Font-Awesome/blob/6.x/LICENSE.txt)
