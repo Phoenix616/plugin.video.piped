@@ -32,13 +32,19 @@ def home() -> None:
 	folders.append(('settings', addon.getLocalizedString(30007), False))
 
 	for folder in folders:
-		listitem = xbmcgui.ListItem(folder[1])
-		listitem.setArt({'thumb': get_icon(folder[0])})
-		xbmcplugin.addDirectoryItem(handle=addon_handle, url=f"{addon_url}/{folder[0]}", listitem=listitem, isFolder=folder[2] if len(folder) > 2 else True)
+		xbmcplugin.addDirectoryItem(handle=addon_handle, url=f"{addon_url}/{folder[0]}", listitem=create_item(folder[1], folder[0]), isFolder=folder[2] if len(folder) > 2 else True)
 
 	xbmcplugin.endOfDirectory(addon_handle)
 
-def get_icon(menuid):
+def create_item(label: str, icon_id: str) -> xbmcgui.ListItem:
+	list_item = xbmcgui.ListItem(label)
+	list_item.setArt(dict(
+		thumb = get_icon(icon_id),
+		fanart = addon.getAddonInfo('fanart')
+	))
+	return list_item
+
+def get_icon(menuid: str) -> str:
 	return f"special://home/addons/{addon.getAddonInfo('id')}/resources/icons/{menuid}.png"
 
 def watch(video_id: str) -> None:
@@ -242,9 +248,9 @@ def search_select() -> None:
 	window = xbmcgui.Window(10000)
 	window.setProperty('PipedLastSearch', '')
 
-	xbmcplugin.addDirectoryItem(handle=addon_handle, url=f"{addon_url}/search?search_filter=videos", listitem=xbmcgui.ListItem(addon.getLocalizedString(30018)), isFolder=True)
-	xbmcplugin.addDirectoryItem(handle=addon_handle, url=f"{addon_url}/search?search_filter=channels", listitem=xbmcgui.ListItem(addon.getLocalizedString(30019)), isFolder=True)
-	xbmcplugin.addDirectoryItem(handle=addon_handle, url=f"{addon_url}/search?search_filter=playlists", listitem=xbmcgui.ListItem(addon.getLocalizedString(30003)), isFolder=True)
+	xbmcplugin.addDirectoryItem(handle=addon_handle, url=f"{addon_url}/search?search_filter=videos", listitem=create_item(addon.getLocalizedString(30018), 'videos'), isFolder=True)
+	xbmcplugin.addDirectoryItem(handle=addon_handle, url=f"{addon_url}/search?search_filter=channels", listitem=create_item(addon.getLocalizedString(30019), 'channels'), isFolder=True)
+	xbmcplugin.addDirectoryItem(handle=addon_handle, url=f"{addon_url}/search?search_filter=playlists", listitem=create_item(addon.getLocalizedString(30003), 'playlists'), isFolder=True)
 	xbmcplugin.endOfDirectory(addon_handle)
 
 def settings() -> None:
